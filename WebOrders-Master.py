@@ -1,8 +1,7 @@
-# Commit 1 : Skeleton Commit
+# Commit  : Skeleton Commit
 # Changes : NA
 
 "1-IMPORT LIBRARIES"
-# import 'pandas'
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,7 +12,6 @@ import datapane as dp
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
-# import 'Seaborn'
 import seaborn as sns
 import lazypredict
 
@@ -24,6 +22,7 @@ from sklearn.preprocessing import RobustScaler
 from sklearn.preprocessing import MaxAbsScaler
 from sklearn.preprocessing import QuantileTransformer
 from sklearn.preprocessing import RobustScaler
+
 #EDA Reports
 import sweetviz as sv
 import dtale as de
@@ -41,11 +40,13 @@ from statsmodels.stats import power
 import statsmodels.formula.api as smf
 # train-test split
 from sklearn.model_selection import train_test_split
-#  feature selection
+
+# feature selection
 from sklearn.feature_selection import RFE
 from sklearn import tree
 from sklearn.model_selection import GridSearchCV
 from mlxtend.feature_selection import SequentialFeatureSelector as sfs
+
 # machine learning
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import LinearSVC
@@ -68,6 +69,7 @@ from sklearn.ensemble import RandomForestRegressor
 from IPython.display import Image
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVR
+
 # Import required libraries for machine learning classifiers
 from sklearn.linear_model import LinearRegression
 from sklearn.svm import SVR
@@ -132,7 +134,7 @@ from lazypredict.Supervised import LazyClassifier, LazyRegressor
 import pycaret
 
 
-'DATA IMPORT'
+                             'DATA PREPARATION'
 Web = pd.read_csv('D:/Rollingpinn/MODEL BUILDING/Web/Model1/Data/Web.csv')
 Google = pd.read_csv('D:/Rollingpinn/MODEL BUILDING/Web/Model1/Data/GOOGLE.csv')
 Fb = pd.read_csv('D:/Rollingpinn/MODEL BUILDING/Web/Model1/Data/FB.csv')
@@ -140,8 +142,6 @@ Fbads = pd.read_csv('D:/Rollingpinn/MODEL BUILDING/Web/Model1/Data/FB-ADS.csv')
 Ig = pd.read_csv('D:/Rollingpinn/MODEL BUILDING/Web/Model1/Data/IG.csv')
 Broadcast = pd.read_csv('D:/Rollingpinn/MODEL BUILDING/Web/Model1/Data/Broadcast.csv')
 
-
-'EDA'
 #Converting to date
 Web['Orderdate'] = pd.to_datetime(Web['Orderdate']).dt.date
 Google['Orderdate'] = pd.to_datetime(Google['Orderdate']).dt.date
@@ -169,8 +169,6 @@ concat['Orderdate'] = pd.to_datetime(concat['Orderdate'])
 concat['Line-Deliveredcount'] =  concat['Line-Deliveredcount'].fillna(0)
 concat['Line-Broadcastopened'] =  concat['Line-Broadcastopened'].fillna(0)
 concat['Line-Broadcastclick'] =  concat['Line-Broadcastclick'].fillna(0)
-
-
 
                        'CUSTOM FUNCTIONS'
 #Brodcast - for broadcast return the broadcastdata or else 0
@@ -226,12 +224,6 @@ def Quarter(x):
     else:
         return 4
 
-
-#Applying Function
-concat['Broadcastopenrate'] = concat['Broadcastopenrate'].apply(replace)
-concat['Broadcastclickrate'] = concat['Broadcastclickrate'].apply(replace)
-
-
 #Splitting date into day,month,year
 concat["day"] = concat['Orderdate'].map(lambda x: x.day)
 concat["month"] = concat['Orderdate'].map(lambda x: x.month)
@@ -239,46 +231,21 @@ concat["year"] = concat['Orderdate'].map(lambda x: x.year)
 concat['dayofweek'] = pd.to_datetime(concat['Orderdate']).dt.dayofweek
 
 
-
-
-
-                                'FEATURE STORE'
-#TIME FUNCTIONS
-concat['Week'] = concat['day'].apply(Week)
-concat['Weekday/Weekend'] = concat['dayofweek'].apply(Weekdayend)
-concat['Monthsplitup'] = concat['day'].apply(Monthsplitup)
-concat['Quarter'] = concat['month'].apply(Quarter)
-#BROADCAST
-concat['broadcast-yes/no'] = concat['Line-Deliveredcount'].apply(replacedate)
-concat['Broadcastopenrate'] =  concat['Broadcastopenrate'].fillna(0)
-concat['Broadcastclickrate'] =  concat['Broadcastclickrate'].fillna(0)
-concat['Broadcastopenrate'] = (concat['Line-Broadcastopened']/concat['Line-Deliveredcount'])*100
-concat['Broadcastclickrate'] = (concat['Line-Broadcastclick']/concat['Line-Deliveredcount'])*100
-#MARKETING ATTRIBUTES
-concat['AverageOrderValue'] = concat['Webprice'] / concat['Weborders']
-concat['NewUsersRate'] = concat['GA-Newusers']/concat['GA-Users']
-concat['TotalLikes'] = concat['IG - Likecount'] + concat['FB-Totallikes']
-concat['Totalreach'] = concat['IG-Profilereach'] + concat['FB-Totalreach']
-concat['Totalclicks'] = concat['IG - Clickswebsite'] + concat['FA-Clicks'] + concat['FB-Contentclicks'] + concat['GA-Productlistclicks']
-concat['TotalImpressions'] = concat['IG-Profileimpressions'] + concat['FB-Totalimpressions'] + concat['FA-Impressions']
-concat['AdusageRate'] = concat['FA-Amountspent']/concat['GA-Newusers']
-
-'NULL VALUES'
+                           'Exploratory Data Analysis'
+#NULL VALUES
 Total = concat.isnull().sum().sort_values(ascending=False)
 Percent = (concat.isnull().sum()*100/len(concat)).sort_values(ascending=False)
 Missingdata = pd.concat([Total, Percent], axis = 1, keys = ['Total', 'Percentage of Missing Values'])
 print(Missingdata)
 
-'HIGH NULL VALUE COLUMN DROP'
+#HIGH NULL VALUE COLUMN DROP
 concat = concat.drop(['Line-Videostart','Line-VideoComplete','Orderdate'],axis=1)
 
-'IMPUTATION'
-#KNN Imputer
+#IMPUTATION
 from sklearn.impute import KNNImputer
 imputer = KNNImputer(n_neighbors=5)
 concat = pd.DataFrame(imputer.fit_transform(concat),columns = concat.columns)
 
-'Exploratory Data Analysis'
 #Extended Numerical Summary
 def numericalattributes(X):
     Output = pd.DataFrame()
@@ -295,7 +262,6 @@ def numericalattributes(X):
     Output ['Count'] = X.count().values
     return Output
 
-##Applying Function
 numericalattributes(concat).to_excel('D:/Rollingpinn/MODEL BUILDING/Web/Model1/EDA/Data Summary/summary.xlsx')
 
 #VIF
@@ -305,12 +271,15 @@ def variableinflation(X):
     vif["VIF"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
     return(vif)
 
-##Applying Function
 variableinflation(concat).to_excel('D:/Rollingpinn/MODEL BUILDING/Web/Model1/EDA/VIF/VIF-web.xlsx')
 
 #CORRELATION
 correlation = concat.corr()
 correlation.to_excel('D:/Rollingpinn/MODEL BUILDING/Web/Model1/EDA/Correlation/corr-web.xlsx')
+
+#Visualization
+
+
 
 #SCALING
 sc = StandardScaler()
@@ -321,12 +290,33 @@ datasc = pd.DataFrame(concat,columns = concat.columns)
 logt = np.log(datasc+0.0000000000000000000000001)
 numericalattributes(logt).to_excel('D:/Rollingpinn/MODEL BUILDING/Web/Model1/EDA/Data Summary/summary-logt.xlsx')
 
-
-
-
 #OUTLIER ANALYSIS
 
 
+                         'FEATURE STORE'
+#TIME FUNCTIONS
+concat['Week'] = concat['day'].apply(Week)
+concat['Weekday/Weekend'] = concat['dayofweek'].apply(Weekdayend)
+concat['Monthsplitup'] = concat['day'].apply(Monthsplitup)
+concat['Quarter'] = concat['month'].apply(Quarter)
+
+#BROADCAST
+concat['broadcast-yes/no'] = concat['Line-Deliveredcount'].apply(replacedate)
+concat['Broadcastopenrate'] =  concat['Broadcastopenrate'].fillna(0)
+concat['Broadcastclickrate'] =  concat['Broadcastclickrate'].fillna(0)
+concat['Broadcastopenrate'] = (concat['Line-Broadcastopened']/concat['Line-Deliveredcount'])*100
+concat['Broadcastclickrate'] = (concat['Line-Broadcastclick']/concat['Line-Deliveredcount'])*100
+concat['Broadcastopenrate'] = concat['Broadcastopenrate'].apply(replace)
+concat['Broadcastclickrate'] = concat['Broadcastclickrate'].apply(replace)
+
+#MARKETING ATTRIBUTES
+concat['AverageOrderValue'] = concat['Webprice'] / concat['Weborders']
+concat['NewUsersRate'] = concat['GA-Newusers']/concat['GA-Users']
+concat['TotalLikes'] = concat['IG - Likecount'] + concat['FB-Totallikes']
+concat['Totalreach'] = concat['IG-Profilereach'] + concat['FB-Totalreach']
+concat['Totalclicks'] = concat['IG - Clickswebsite'] + concat['FA-Clicks'] + concat['FB-Contentclicks'] + concat['GA-Productlistclicks']
+concat['TotalImpressions'] = concat['IG-Profileimpressions'] + concat['FB-Totalimpressions'] + concat['FA-Impressions']
+concat['AdusageRate'] = concat['FA-Amountspent']/concat['GA-Newusers']
 
 
                           'TRAIN TEST SPLIT'
@@ -417,8 +407,6 @@ def Regression(X, y, folds):
 
 #Applying Function
 Regression(X,Y,5).to_excel('D:/Rollingpinn/MODEL BUILDING/Web/Model1/Validation/Basemodel/Basemodel-InbuiltFunction.xlsx')
-
-
 
 
                             'FEATURE SELECTION'
