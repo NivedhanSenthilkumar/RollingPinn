@@ -165,7 +165,6 @@ Location23['Orderdate'] = pd.to_datetime(Location23['Orderdate'])
 Location23 = Location23.sort_values(by = 'Orderdate')
 daywisesilom = pd.DataFrame(Location23.groupby(['Orderdate'])['TotalPrice'].sum())
 
-
 'EXPORT DATA'
 All.to_excel('D:/Rollingpinn/Cartanalysis/POS/All/All-POSORDERS.xlsx')
 Location1.to_excel('D:/Rollingpinn/Cartanalysis/POS/Locations/Location1-SamyanMitrtown.xlsx')
