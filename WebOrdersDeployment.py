@@ -111,7 +111,7 @@ filterwarnings('ignore')
 from lazypredict.Supervised import LazyClassifier, LazyRegressor
 import pycaret
 
-   'DATA PREPARATION'
+'DATA PREPARATION'
 Web = pd.read_csv('D:/Rollingpinn/MODEL BUILDING/Web/Model1/Data/Web.csv')
 Google = pd.read_csv('D:/Rollingpinn/MODEL BUILDING/Web/Model1/Data/GOOGLE.csv')
 Fb = pd.read_csv('D:/Rollingpinn/MODEL BUILDING/Web/Model1/Data/FB.csv')
@@ -258,14 +258,12 @@ Organicsearch = st.sidebar.slider(label='OS', min_value=4.0,
                                   max_value=16.0,
                                   value=10.0,
                                   step=0.1)
-
 Users = st.sidebar.slider(label='Users', min_value=0.00,
                           max_value=2.00,
                           value=1.00,
                           step=0.01)
 
-features = {'GA-Organicsearches': Organicsearch, 'GA-Users': Users
-            }
+features = {'GA-Organicsearches': Organicsearch, 'GA-Users': Users}
 
 features_df = pd.DataFrame([features])
 
