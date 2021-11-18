@@ -1,4 +1,5 @@
-pycaret
+openpyxl
+sklearn
 streamlit
 pandas
 numpy
