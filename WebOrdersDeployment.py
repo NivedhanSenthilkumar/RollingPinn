@@ -131,11 +131,6 @@ et_model = create_model('et')
 predict_model(et_model)
 save_model(et_model, model_name = 'extra_tree_model')
 
-from pycaret.classification import load_model, predict_model
-import streamlit as st
-import pandas as pd
-import numpy as np
-
 
 def predict_quality(model, df):
     predictions_data = predict_model(estimator=model, data=concat)
@@ -167,7 +162,6 @@ st.table(features_df)
 
 if st.button('Predict'):
     prediction = predict_quality(model, features_df)
-
     st.write(' Based on feature values, your wine quality is ' + str(prediction))
 
 
