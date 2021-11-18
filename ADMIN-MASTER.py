@@ -1,5 +1,5 @@
-
-
+# Commit  : Skeleton Commit
+# Changes : NA
 
 "1-IMPORT LIBRARIES"
 import pandas as pd
@@ -131,3 +131,41 @@ pd.options.display.float_format = '{:.6f}'.format
 from warnings import filterwarnings
 filterwarnings('ignore')
 from lazypredict.Supervised import LazyClassifier, LazyRegressor
+
+
+'DATA IMPORT'
+Admin = pd.read_csv('D:/Rollingpinn/MODEL BUILDING/Admin/MODEL1/DATA/Admin.csv')
+Google = pd.read_csv('D:/Rollingpinn/MODEL BUILDING/Admin/MODEL1/DATA/GOOGLE.csv')
+Fb = pd.read_csv('D:/Rollingpinn/MODEL BUILDING/Admin/MODEL1/Data/FB.csv')
+Fbads = pd.read_csv('D:/Rollingpinn/MODEL BUILDING/Admin/MODEL1/Data/FB-ADS.csv')
+Ig = pd.read_csv('D:/Rollingpinn/MODEL BUILDING/Admin/MODEL1/Data/IG.csv')
+Broadcast = pd.read_csv('D:/Rollingpinn/MODEL BUILDING/Admin/MODEL1/Data/Broadcast.csv')
+
+#Setting Datatype of Orderdate to date
+Admin['Orderdate'] = pd.to_datetime(Admin['Orderdate']).dt.date
+Google['Orderdate'] = pd.to_datetime(Google['Orderdate']).dt.date
+Fb['Orderdate'] = pd.to_datetime(Fb['Orderdate']).dt.date
+Ig['Orderdate'] = pd.to_datetime(Ig['Orderdate']).dt.date
+Fb['Orderdate'] = pd.to_datetime(Fb['Orderdate']).dt.date
+Fbads['Orderdate'] = pd.to_datetime(Fbads['Orderdate']).dt.date
+Broadcast['Orderdate'] = pd.to_datetime(Broadcast['Orderdate']).dt.date
+
+#Sorting by Date
+Admin =  Admin.sort_values(by = 'Orderdate')
+Google =  Google.sort_values(by = 'Orderdate')
+Fb =  Fb.sort_values(by = 'Orderdate')
+Fbads =  Fbads.sort_values(by = 'Orderdate')
+Ig =  Ig.sort_values(by = 'Orderdate')
+Broadcast =  Broadcast.sort_values(by = 'Orderdate')
+
+#DATAFRAMES JOINING
+concat = Admin.merge(Google,on='Orderdate',how = 'left').merge(Fb,on='Orderdate',how = 'left').merge(Ig,on='Orderdate',how = 'left').merge(Fbads,on='Orderdate',how = 'left').merge(Broadcast,on='Orderdate',how = 'left')
+
+#Sort orderdates for matching
+concat['Orderdate'] = pd.to_datetime(concat['Orderdate'])
+
+#Altering Broadcast columns
+concat['Line-Deliveredcount'] =  concat['Line-Deliveredcount'].fillna(0)
+concat['Line-Broadcastopened'] =  concat['Line-Broadcastopened'].fillna(0)
+concat['Line-Broadcastclick'] =  concat['Line-Broadcastclick'].fillna(0)
+
