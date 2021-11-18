@@ -275,4 +275,3 @@ if st.button('Predict'):
     st.write(' Based on feature values, your wine quality is ' + str(prediction))
 
 
-
