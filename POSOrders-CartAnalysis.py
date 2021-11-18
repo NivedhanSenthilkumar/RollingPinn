@@ -49,6 +49,17 @@ df = df.reset_index()
 All = df.merge(keys, how='inner', on='Keys')
 All['TotalPrice'] = All['Unitprice']*All['Quantity']
 
+#All Locations - Daywise and daywise combined revenue
+CentralWorld = pd.read_excel('D:/Rollingpinn/Cartanalysis/POS/Daywise Revenue/Reworked Summary Sheet.xlsx', sheet_name='CentralWorld')
+Silom = pd.read_excel('D:/Rollingpinn/Cartanalysis/POS/Daywise Revenue/Reworked Summary Sheet.xlsx', sheet_name='Silom')
+Emquartier = pd.read_excel('D:/Rollingpinn/Cartanalysis/POS/Daywise Revenue/Reworked Summary Sheet.xlsx', sheet_name='Emquartier')
+SiamParagon = pd.read_excel('D:/Rollingpinn/Cartanalysis/POS/Daywise Revenue/Reworked Summary Sheet.xlsx', sheet_name='SiamParagon')
+SamyanMitrtown = pd.read_excel('D:/Rollingpinn/Cartanalysis/POS/Daywise Revenue/Reworked Summary Sheet.xlsx', sheet_name='SamyanMitrtown')
+
+#combined
+concat = CentralWorld.merge(Silom,on='Orderdate',how = 'left').merge(Emquartier,on='Orderdate',how = 'left').merge(SiamParagon,on='Orderdate',how = 'left').merge(SamyanMitrtown,on='Orderdate',how = 'left')
+
+
 'LOCATION1 - SAMYAN MITRTOWN'
 for ind,row in loc1.iterrows():
     d = json.loads(row[1])
@@ -167,6 +178,7 @@ daywisesilom = pd.DataFrame(Location23.groupby(['Orderdate'])['TotalPrice'].sum(
 
 'EXPORT DATA'
 All.to_excel('D:/Rollingpinn/Cartanalysis/POS/All/All-POSORDERS.xlsx')
+concat.to_excel('D:/Rollingpinn/Cartanalysis/POS/Daywise Revenue/AllLocations.xlsx')
 Location1.to_excel('D:/Rollingpinn/Cartanalysis/POS/Locations/Location1-SamyanMitrtown.xlsx')
 Location1product.to_excel('D:/Rollingpinn/Cartanalysis/POS/Locations/Location1product-SamyanMitrtown.xlsx')
 daywisesamyanmitrtown.to_excel('D:/Rollingpinn/Cartanalysis/POS/Daywise Revenue/SamyanMitrtown.xlsx')
