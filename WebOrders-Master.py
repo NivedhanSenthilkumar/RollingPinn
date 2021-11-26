@@ -130,8 +130,8 @@ pd.options.display.float_format = '{:.6f}'.format
 # to suppress warnings
 from warnings import filterwarnings
 filterwarnings('ignore')
-from lazypredict.Supervised import LazyClassifier, LazyRegressor
-import pycaret
+
+
 
 
                              'DATA PREPARATION'
@@ -444,26 +444,7 @@ print(feat_index)
 
 
 #MODEL EVALUATION
-def Regressionerrormetric(model):
-    ypred = model.predict(xtest)
-    scorecard = pd.DataFrame({
-        'Mean Absolute Error': metrics.mean_absolute_error(ytest, ypred),
-        'Mean Squared Error': metrics.mean_squared_error(ytest, ypred),
-        'Root Mean Squared Error': np.sqrt(((ypred - ytest) ** 2).mean()),
-        'Mean Absolute Percentage error' : np.mean(np.abs((ytest - ypred)/ytest))*100},
-        'Mean Squared Log Error':mean_squared_log_error( ytest, ypred),
-        'Root Mean Square Log error' : np.sqrt(mean_squared_log_error( ytest, ypred )),
-        index=['ERROR', 'MSE', 'RMSE','MAPE','MSLE','RMSLE'])
-    return scorecard.head(1)
 
-a = Regressionerrormetric(model1)
-b = Regressionerrormetric(model2)
-c = Regressionerrormetric(model3)
-
-Experiments = pd.DataFrame()
-Experiments['ModelName'] = ['Bagging Model','Boosting Model','Bagging&Boosting']
-Experiments = pd.concat([a,b,c],axis=0)
-print(Experiments)
 
 #FINAL MODEL
 
@@ -487,64 +468,5 @@ fe_imp=important_features.sort_values(by='Importance',ascending=False)
 
 
 
-'SINGLE MESSAGE'
-import pywhatkit
-pywhatkit.sendwhatmsg('+919790766998','HI',12,19)
 
-'BULK MESSAGES'
-# Program to send bulk customized message through WhatsApp web application
-# Author @inforkgodara
-
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import NoSuchElementException
-import pandas
-import time
-
-# Load the chrome driver
-driver = webdriver.Chrome('/path/to/chromedriver')
-count = 0
-
-# Open WhatsApp URL in chrome browser
-driver.get("https://web.whatsapp.com/")
-wait = WebDriverWait(driver, 20)
-
-# Read data from excel
-excel_data = pandas.read_excel('D:/Customer bulk email data.xlsx', sheet_name='Customers')
-
-# Iterate excel rows till to finish
-for column in excel_data['Name'].tolist():
-    # Assign customized message
-    message = excel_data['Message'][0]
-
-    # Locate search box through x_path
-    search_box = '//*[@id="side"]/div[1]/div/label/div/div[2]'
-    person_title = wait.until(lambda driver:driver.find_element_by_xpath(search_box))
-
-    # Clear search box if any contact number is written in it
-    person_title.clear()
-
-    # Send contact number in search box
-    person_title.send_keys(str(excel_data['Contact'][count]))
-    count = count + 1
-
-    # Wait for 2 seconds to search contact number
-    time.sleep(2)
-
-    try:
-        # Load error message in case unavailability of contact number
-        element = driver.find_element_by_xpath('//*[@id="pane-side"]/div[1]/div/span')
-    except NoSuchElementException:
-        # Format the message from excel sheet
-        message = message.replace('{customer_name}', column)
-        person_title.send_keys(Keys.ENTER)
-        actions = ActionChains(driver)
-        actions.send_keys(message)
-        actions.send_keys(Keys.ENTER)
-        actions.perform()
-
-# Close chrome browser
-driver.quit()
 
