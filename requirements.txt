@@ -3,3 +3,4 @@ sklearn
 streamlit
 pandas
 numpy
+pickle
